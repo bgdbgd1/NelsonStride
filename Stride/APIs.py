@@ -10,7 +10,7 @@ def UploadProductsToElastic(siteName):
     # Connect to ElasticSearch.
     es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
     # Encode products in JSON format and POST them in ElasticSearch.
-    getProducts = function
+    getProducts = []
     if siteName == 'omoda':
         getProducts = GetProductsOmoda()
     else:
@@ -25,7 +25,7 @@ def UploadProductsToElastic(siteName):
 def DeleteElastic(siteName):
     # Connect to ElasticSearch.
     es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-    getProducts = function
+    getProducts = []
     if siteName == 'omoda':
         getProducts = GetProductsOmoda()
     else:
@@ -43,7 +43,7 @@ def GetIndexedSites():
 # <param name="siteName">The name of the website from which the brands are requested.
 def GetIndexedBrands(siteName):
     es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-    resultQuery = es.search(index='productsdetails' + siteName, doc_type='products' + siteName, body={"_source": ["brand"]})
+    resultQuery = es.search(index='productsdetails' + siteName, doc_type='products', body={"_source": ["brand"]})
     resultBrands = []
     for hit in resultQuery['hits']['hits']:
         resultBrands.append(hit['_source']['brand'])
@@ -55,7 +55,7 @@ def GetIndexedBrands(siteName):
 # <param name="brand">The name of the brand which products are requested.
 def GetProductsForBrand(siteName, brand):
     es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-    resultQuery = es.search(index='productsdetails' + siteName, doc_type='products' + siteName, body={"query": {"match": {"brand": brand}},
+    resultQuery = es.search(index='productsdetails' + siteName, doc_type='products', body={"query": {"match": {"brand": brand}},
                                                                                 "_source": ["name"]})
     resultProducts = []
     for hit in resultQuery['hits']['hits']:
@@ -68,7 +68,7 @@ def GetProductsForBrand(siteName, brand):
 # <param name="productName">The name of the product for which the details are requested.
 def GetProductDetails(siteName, productName):
     es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-    resultQuery = es.search(index='productsdetails' + siteName, doc_type='products' + siteName, body={"query":
+    resultQuery = es.search(index='productsdetails' + siteName, doc_type='products', body={"query":
                             {"match_phrase": {"name": productName}}, "_source": ["name", "brand", "color", "shoeType",
                                                                                  "price", "categoryRank"]})
     resultProducts = []
